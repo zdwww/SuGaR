@@ -5,7 +5,7 @@ import open3d as o3d
 from pytorch3d.loss import mesh_laplacian_smoothing, mesh_normal_consistency
 from pytorch3d.transforms import quaternion_apply, quaternion_invert
 from sugar_scene.gs_model import GaussianSplattingWrapper, fetchPly
-from sugar_scene.sugar_model import SuGaR
+from sugar_scene.sugar_model import SuGaR, convert_refined_sugar_into_gaussians
 from sugar_scene.sugar_optimizer import OptimizationParams, SuGaROptimizer
 from sugar_scene.sugar_densifier import SuGaRDensifier
 from sugar_utils.loss_utils import ssim, l1_loss, l2_loss
@@ -822,4 +822,11 @@ def coarse_training_with_sdf_regularization(args):
                     )
 
     CONSOLE.print("Final model saved.")
+    coarse_ply_save_path = os.path.join(sugar_checkpoint_path, 'coarse_sdf.ply')
+    try:
+        coarse_gaussians = convert_refined_sugar_into_gaussians(sugar)
+        coarse_gaussians.save_ply(coarse_ply_save_path)
+        CONSOLE.print("Ply saved successfully.")
+    except:
+        CONSOLE.print("Ply saved unsuccessfully.")
     return model_path
