@@ -110,9 +110,10 @@ def load_gs_cameras(source_path, gs_output_path, image_resolution=1,
             if image_resolution in [1, 2, 4, 8]:
                 downscale_factor = image_resolution
                 # resolution = round(orig_w/(image_resolution)), round(orig_h/(image_resolution))
-            if max(orig_h, orig_w) > max_img_size:
-                additional_downscale_factor = max(orig_h, orig_w) / max_img_size
-                downscale_factor = additional_downscale_factor * downscale_factor
+            # if max(orig_h, orig_w) > max_img_size:
+            #     additional_downscale_factor = max(orig_h, orig_w) / max_img_size
+            #     downscale_factor = additional_downscale_factor * downscale_factor
+            assert downscale_factor == 1, "Downscale factor must be 1 for GT images."
             resolution = round(orig_w/(downscale_factor)), round(orig_h/(downscale_factor))
             resized_image_rgb = PILtoTorch(image, resolution)
             gt_image = resized_image_rgb[:3, ...]
@@ -123,9 +124,10 @@ def load_gs_cameras(source_path, gs_output_path, image_resolution=1,
             if image_resolution in [1, 2, 4, 8]:
                 downscale_factor = image_resolution
                 # resolution = round(orig_w/(image_resolution)), round(orig_h/(image_resolution))
-            if max(height, width) > max_img_size:
-                additional_downscale_factor = max(height, width) / max_img_size
-                downscale_factor = additional_downscale_factor * downscale_factor
+            assert downscale_factor == 1, "Downscale factor must be 1 for GT images."
+            # if max(height, width) > max_img_size:
+            #     additional_downscale_factor = max(height, width) / max_img_size
+            #     downscale_factor = additional_downscale_factor * downscale_factor
             image_height, image_width = round(height/downscale_factor), round(width/downscale_factor)
         
         gs_camera = GSCamera(
